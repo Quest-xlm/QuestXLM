@@ -1,16 +1,28 @@
 [package]
-name = "quest-xlm"
-version = "0.1.0"
+name = "quest-xlm-protocol"
+version = "1.0.0"
 edition = "2021"
+license = "MIT"
+authors = ["QuestXLM Team <team@questxlm.org>"]
+description = "Decentralized learn-to-earn protocol on Stellar Soroban"
+repository = "https://github.com/stellar-ecosystem/questxlm"
+keywords = ["stellar", "soroban", "education", "defi", "learn-to-earn"]
+categories = ["cryptography", "wasm"]
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
 soroban-sdk = { version = "21.0.0", features = ["alloc"] }
+serde = { version = "1.0", features = ["derive"], default-features = false }
 
 [dev-dependencies]
 soroban-sdk = { version = "21.0.0", features = ["testutils"] }
+tokio-test = "0.4"
+
+[features]
+default = []
+testutils = ["soroban-sdk/testutils"]
 
 [profile.release]
 opt-level = "z"
@@ -21,3 +33,16 @@ debug-assertions = false
 panic = "abort"
 codegen-units = 1
 lto = true
+
+[profile.release-with-debug]
+inherits = "release"
+debug = true
+strip = "none"
+
+# Optimization for contract size
+[profile.contract]
+inherits = "release"
+lto = true
+codegen-units = 1
+panic = "abort"
+overflow-checks = true
